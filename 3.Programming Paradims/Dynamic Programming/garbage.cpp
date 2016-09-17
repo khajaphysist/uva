@@ -1,0 +1,188 @@
+#ifndef _GLIBCXX_NO_ASSERT
+#include <cassert>
+#endif
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <ciso646>
+#include <climits>
+#include <clocale>
+#include <cmath>
+#include <csetjmp>
+#include <csignal>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#if __cplusplus >= 201103L
+#include <ccomplex>
+#include <cfenv>
+#include <cinttypes>
+#include <cstdalign>
+#include <cstdbool>
+#include <cstdint>
+#include <ctgmath>
+#include <cwchar>
+#include <cwctype>
+#endif
+
+// C++
+#include <algorithm>
+#include <bitset>
+#include <complex>
+#include <deque>
+#include <exception>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <ios>
+#include <iosfwd>
+#include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <locale>
+#include <map>
+#include <memory>
+#include <new>
+#include <numeric>
+#include <ostream>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <streambuf>
+#include <string>
+#include <typeinfo>
+#include <utility>
+#include <valarray>
+#include <vector>
+
+#if __cplusplus >= 201103L
+#include <array>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <forward_list>
+#include <future>
+#include <initializer_list>
+#include <mutex>
+#include <random>
+#include <ratio>
+#include <regex>
+#include <scoped_allocator>
+#include <system_error>
+#include <thread>
+#include <tuple>
+#include <typeindex>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#endif
+
+using namespace std;
+
+#define vi vector<int>
+#define si set<int>
+#define ii pair<int,int>
+#define vvi vector<vi>
+#define um(a,b) unordered_map<a,b>
+#define pb push_back
+#define all(c) (c).begin(),(c).end()
+#define present(c,x) ((c).find(x) != (c).end())
+#define cpresent(c,x) (find(all(c),x) != (c).end())
+
+template<class T>
+inline void pv(T const & v, char c){
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    cout << *it;
+    auto ite = it;
+    if (++ite == v.end())continue;
+    else if(c!='x'){cout << c;}
+  }if(c != '\n')cout << endl;
+}
+
+template<class T>
+inline void pa(T const v[],int n, char c){
+  for (int i = 0; i < n; ++i) {
+    cout << v[i];
+    if (i==n-1)continue;
+    else if(c!='x'){cout << c;}
+  }
+  if(c != '\n')cout << endl;
+}
+
+
+template<class T>
+inline void pvv(T const & vv, char c){
+  for (auto it = vv.begin(); it != vv.end(); ++it) {
+    pv(*it,c);
+  }
+}
+
+
+inline void iv(vi &v,int n){
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    scanf("%d",&temp);
+    v.push_back(temp);
+  }
+}
+
+inline void is(si &v,int n){
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    scanf("%d",&temp);
+    v.insert(temp);
+  }
+}
+
+template<class T>
+inline void ia(T a[],int n){
+  for (int i = 0; i < n; ++i) scanf("%d",&a[i]);
+}
+
+//global variables
+long long g[20][20][20];
+int main(){
+  int t;
+  cin >> t;
+  for (int i = 0; i < t; ++i) {
+    int a,b,c;
+    cin >> a >> b >> c;
+    for (int j = 0; j < a; ++j) {
+      for (int k = 0; k < b; ++k) {
+        for (int l = 0; l < c; ++l) {
+          long long temp; cin >> temp;
+          g[j][k][l] = temp + (j?g[j-1][k][l]:0) + (k?g[j][k-1][l]:0) + (l?g[j][k][l-1]:0)
+            - ((j&&k)?g[j-1][k-1][l]:0) - ((k&&l)?g[j][k-1][l-1]:0) - ((l&&j)?g[j-1][k][l-1]:0) + ((j&&k&&l)?g[j-1][k-1][l-1]:0);
+        }
+      }
+    }
+
+    long long mx = -8001; mx *= (1<<30);
+    long long sum = 0;
+    for (int i1 = -1; i1 < a-1; ++i1) {
+      for (int j1 = -1; j1 < b-1; ++j1) {
+        for (int k1 = -1; k1 < c-1; ++k1) {
+          for (int i2 = i1+1; i2 < a; ++i2)for (int j2 = j1+1; j2 < b; ++j2)for (int k2 = k1+1; k2 < c; ++k2){
+                sum = g[i2][j2][k2] - (i1<0 ? 0:g[i1][j2][k2]) - (j1<0 ? 0:g[i2][j1][k2]) - (k1<0?0:g[i2][j2][k1]) + ((i1<0||j1<0)?0:g[i1][j1][k2]) + ((j1<0||k1<0)?0:g[i2][j1][k1]) + ((i1<0||k1<0)?0:g[i1][j2][k1]) - ((i1<0||j1<0||k1<0)?0:g[i1][j1][k1]);
+                mx = max(sum,mx);
+
+              }
+        }
+      }
+    }
+
+    cout << mx << endl;
+    if(i!=t-1)cout << endl;
+
+
+
+  }
+}
